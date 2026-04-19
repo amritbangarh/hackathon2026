@@ -1,0 +1,10 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+node_modules/
+web/node_modules/
+web/dist/
+logs/*.json
+.python-version

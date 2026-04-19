@@ -1,0 +1,10 @@
+.env
+__pycache__
+*.pyc
+.git
+.cursor
+logs
+web/node_modules
+docs
+*.md
+!README.md

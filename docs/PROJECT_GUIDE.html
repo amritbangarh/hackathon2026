@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopWave — Project Guide</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #444;
+      --accent: #0d9488;
+      --border: #ddd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      line-height: 1.55;
+      color: var(--ink);
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      font-size: 11pt;
+    }
+    h1 {
+      font-size: 1.75rem;
+      border-bottom: 3px solid var(--accent);
+      padding-bottom: 0.35rem;
+      margin-top: 0;
+    }
+    h2 {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      color: #0f766e;
+    }
+    h3 { font-size: 1rem; margin-top: 1.25rem; }
+    p, li { color: var(--muted); }
+    strong { color: var(--ink); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 10pt;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.6rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f0fdfa; color: #134e4a; }
+    pre {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      overflow-x: auto;
+      font-size: 9pt;
+      line-height: 1.4;
+    }
+    code { font-family: ui-monospace, monospace; font-size: 0.92em; }
+    .hint {
+      background: #fefce8;
+      border-left: 4px solid #eab308;
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+      font-size: 10pt;
+    }
+    .footer-note {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 9pt;
+      color: #888;
+    }
+    @media print {
+      body { padding: 0; max-width: none; font-size: 10pt; }
+      h2 { page-break-after: avoid; }
+      pre, table { page-break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>ShopWave — Project Guide</h1>
+<p><strong>Autonomous Support Resolution Agent</strong> — hackathon-style submission for fictitious retailer <strong>ShopWave</strong>: 20 mock tickets, ingest → triage → tool-based resolution or escalation → full audit trail.</p>
+
+<h2>1. Purpose</h2>
+<table>
+  <tr><th>Stage</th><th>Implementation</th></tr>
+  <tr><td><strong>Ingest</strong></td><td>Loads JSON + KB from <code>agentic_ai_hackthon_2026_sample_data-main/</code>.</td></tr>
+  <tr><td><strong>Triage</strong></td><td>Category, urgency, resolvability — rules + optional LLM (Ollama/OpenAI), merged conservatively.</td></tr>
+  <tr><td><strong>Resolve</strong></td><td>Mock CRM tools: lookups, eligibility, refund, KB, reply.</td></tr>
+  <tr><td><strong>Escalate</strong></td><td><code>escalate(ticket_id, summary, priority)</code> with structured summary.</td></tr>
+  <tr><td><strong>Audit</strong></td><td>Thought + tool + attempt + result + status → <code>logs/audit_log.json</code> + optional WebSocket UI.</td></tr>
+</table>
+<p><strong>Concurrency:</strong> All 20 tickets processed in parallel via <code>asyncio.gather</code>.</p>
+
+<h2>2. Hackathon criteria mapping</h2>
+<table>
+  <tr><th>Requirement</th><th>Implementation</th></tr>
+  <tr><td>Multi-step tool chain</td><td>Session → lookups → policy/KB → reply or escalate (KB padding before escalate when needed).</td></tr>
+  <tr><td>Fault tolerance</td><td><code>with_retry</code>; optional simulated timeouts/malformed responses; schema validation.</td></tr>
+  <tr><td>Parallel tickets</td><td><code>agent/runner.py</code> uses <code>asyncio.gather</code>.</td></tr>
+  <tr><td>Explainability</td><td>Audit steps with <strong>thought</strong>; optional <code>llm_triage</code> JSON in logs.</td></tr>
+</table>
+
+<h2>3. Repository layout</h2>
+<pre><code>agent/          Core logic (processor, tools, runner, llm_triage, data_loader)
+api/server.py   FastAPI + WebSocket + static SPA
+web/            React dashboard → dist/
+docs/           architecture.md, failure_modes.md, PROJECT_GUIDE.*
+logs/           audit_log.json, dead_letter.json (generated)
+sample_data/    agentic_ai_hackthon_2026_sample_data-main/
+.env.example    Template for Ollama/OpenAI/fault flags
+requirements.txt / package.json / Dockerfile</code></pre>
+
+<h2>4. Tools (mocks)</h2>
+<p><strong>Read:</strong> <code>get_customer</code>, <code>get_order</code>, <code>get_product</code>, <code>search_knowledge_base</code></p>
+<p><strong>Write:</strong> <code>check_refund_eligibility</code>, <code>issue_refund(order_id, amount)</code>, <code>send_reply</code>, <code>escalate(..., priority)</code></p>
+<p><strong>Optional audit step:</strong> <code>llm_triage</code> when LLM classification is enabled.</p>
+
+<h2>5. Optional LLM triage</h2>
+<p>Classifies category/urgency/resolvability only; <strong>refunds and CRM writes stay deterministic</strong>. Enable with <code>SHOPWAVE_USE_LLM_TRIAGE=1</code> plus <code>OLLAMA_BASE_URL</code> or <code>OPENAI_API_KEY</code>. Copy <code>.env.example</code> to <code>.env</code>.</p>
+
+<h2>6. Command Center UI</h2>
+<p>Build with <code>npm install && npm run build</code>. Run <code>uvicorn api.server:app</code>. Open root URL → <strong>Run all tickets</strong>; WebSocket streams <code>tool_step</code> events.</p>
+
+<h2>7. Environment variables</h2>
+<table>
+  <tr><th>Variable</th><th>Role</th></tr>
+  <tr><td><code>AGENT_SIMULATE_FAULTS</code></td><td>Simulate flaky tools (timeouts, bad KB payload)</td></tr>
+  <tr><td><code>SHOPWAVE_USE_LLM_TRIAGE</code></td><td>Enable LLM triage</td></tr>
+  <tr><td><code>OLLAMA_BASE_URL</code> / <code>OLLAMA_MODEL</code></td><td>Local Llama via Ollama</td></tr>
+  <tr><td><code>OPENAI_API_KEY</code> / <code>OPENAI_MODEL</code> / <code>OPENAI_BASE_URL</code></td><td>Cloud / compatible API</td></tr>
+</table>
+
+<h2>8. How to run</h2>
+<pre><code># CLI
+pip install -r requirements.txt
+python -m agent.main
+
+# Dashboard
+npm install &amp;&amp; npm run build
+python -m uvicorn api.server:app --host 127.0.0.1 --port 8000</code></pre>
+
+<h2>9. Submission checklist</h2>
+<ul>
+  <li><strong>Runnable agent:</strong> <code>python -m agent.main</code> / API + UI</li>
+  <li><strong>README &amp; diagrams:</strong> <code>README.md</code>, <code>docs/architecture.md</code></li>
+  <li><strong>Failure analysis:</strong> <code>docs/failure_modes.md</code></li>
+  <li><strong>Demo:</strong> process all 20 tickets (CLI or UI)</li>
+</ul>
+
+<div class="hint">
+  <strong>Save as PDF:</strong> Use this browser window → Print → Save as PDF (enable background graphics for colored table headers).
+</div>
+
+<p class="footer-note">ShopWave Autonomous Support Agent · hackathonex · See also <code>README.md</code> and <code>PROJECT_GUIDE.md</code> for the Markdown source.</p>
+
+</body>
+</html>

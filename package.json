@@ -1,0 +1,9 @@
+{
+  "name": "shopwave-hackathon",
+  "private": true,
+  "workspaces": ["web"],
+  "scripts": {
+    "build": "npm run build --workspace shopwave-dashboard",
+    "dev": "npm run dev --workspace shopwave-dashboard"
+  }
+}
