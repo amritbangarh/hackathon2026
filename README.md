@@ -2,6 +2,15 @@
 
 Hackathon submission: ingests mock support tickets, **triage** (category, urgency, resolvability), resolves via **tool calls** with **audit logging**, retries, and optional **fault injection**. Processes all **20** sample tickets **concurrently** (`asyncio.gather`).
 
+## Links
+
+| Resource | URL |
+|----------|-----|
+| **GitHub repository** | <https://github.com/amritbangarh/hackathon2026> |
+| **Live demo** (ShopWave Command — hosted API + UI) | <https://hackathon2026-u3da.onrender.com/> |
+
+*The hosted app may take a short time to respond on the first open (Render free tier sleep).*
+
 ## Prerequisites
 
 - Python **3.10+**
