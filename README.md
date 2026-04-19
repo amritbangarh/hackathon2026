@@ -7,6 +7,19 @@ Hackathon submission: ingests mock support tickets, **triage** (category, urgenc
 - Python **3.10+**
 - Node **20+** (only needed to rebuild the dashboard UI from `web/`)
 
+## Quick start — single command (submission requirement)
+
+Do **setup once**, then run with **one command**:
+
+| Goal | Setup once | Single command to run |
+|------|------------|------------------------|
+| **Batch agent — all 20 tickets** (CLI, writes `logs/audit_log.json`) | `pip install -r requirements.txt` | **`python -m agent.main`** |
+| **Full stack — dashboard + API** (Docker; HTTP on port 8000) | `docker build -t shopwave-agent .` | **`docker run --rm -p 8000:8000 shopwave-agent`** |
+
+Use the **first row** for fastest grading from source. Use the **second row** for the interactive UI without installing Node locally (image builds the UI inside Docker).
+
+**Secrets:** Never commit `.env`. Copy **`.env.example`** → **`.env`** locally only; API keys stay on your machine or in your host’s environment (e.g. Render).
+
 ## Tech stack
 
 | Layer | Technologies |
@@ -18,14 +31,15 @@ Hackathon submission: ingests mock support tickets, **triage** (category, urgenc
 | **Deployment** | **Docker** (multi-stage: Node build UI → Python runtime) |
 | **Optional triage** | **OpenAI**-compatible API or **Ollama** (classification only; tools stay deterministic) |
 
-## Hackathon submission files (Step 2)
+## Hackathon submission files (Steps 2–3)
 
 | Deliverable | Location |
 |-------------|----------|
-| **README.md** | This file — setup, run paths, tech stack |
+| **README.md** | This file — setup, **single command** above, tech stack |
 | **architecture.png** | Repo root — one-page agent loop & tool diagram |
 | **failure_modes.md** | Repo root — ≥3 failure scenarios + handling |
-| **audit_log.json** | Repo root — demo run output for **all 20 tickets** (regenerate after runs with `python -m agent.main` or dashboard; copy from `logs/audit_log.json` if needed) |
+| **audit_log.json** | Repo root — demo run output for **all 20 tickets** (regenerate after runs with `python -m agent.main` or dashboard; copy from `logs/audit_log.json` to root if needed) |
+| **demo.mp4** | Repo root — screen recording (**≤5 minutes**); add after you record, then `git add demo.mp4` and push. Omit only if organizers accept a **live** demo instead. |
 
 ## Entry points
 
@@ -178,3 +192,10 @@ docker run --rm -p 8000:8000 -e AGENT_SIMULATE_FAULTS=1 shopwave-agent
 ## Demo checklist
 
 Show **all 20 tickets** end-to-end: either CLI output + `logs/audit_log.json`, or the **dashboard** run with expanded audit trails on several tickets.
+
+### Recorded demo (Step 3)
+
+1. Run the agent or open the dashboard and record your screen (**MP4**, max **5 minutes**).  
+2. Save as **`demo.mp4`** in the **repository root** (same folder as `README.md`).  
+3. Commit and push: `git add demo.mp4 && git commit -m "Add submission demo" && git push`  
+4. If the file is large, use [Git LFS](https://git-lfs.com) or host the video per organizer rules and link it in the submission form.
