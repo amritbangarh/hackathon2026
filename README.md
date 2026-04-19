@@ -7,6 +7,26 @@ Hackathon submission: ingests mock support tickets, **triage** (category, urgenc
 - Python **3.10+**
 - Node **20+** (only needed to rebuild the dashboard UI from `web/`)
 
+## Tech stack
+
+| Layer | Technologies |
+|-------|----------------|
+| **Language / runtime** | Python **3.12** (Dockerfile), **3.10+** locally |
+| **Agent & APIs** | **FastAPI**, **Uvicorn**, **Pydantic**, **httpx**, **python-dotenv** |
+| **Concurrency** | **asyncio** (`asyncio.gather` over tickets) |
+| **Dashboard** | **React 18**, **TypeScript**, **Vite**, **Tailwind CSS** |
+| **Deployment** | **Docker** (multi-stage: Node build UI → Python runtime) |
+| **Optional triage** | **OpenAI**-compatible API or **Ollama** (classification only; tools stay deterministic) |
+
+## Hackathon submission files (Step 2)
+
+| Deliverable | Location |
+|-------------|----------|
+| **README.md** | This file — setup, run paths, tech stack |
+| **architecture.png** | Repo root — one-page agent loop & tool diagram |
+| **failure_modes.md** | Repo root — ≥3 failure scenarios + handling |
+| **audit_log.json** | Repo root — demo run output for **all 20 tickets** (regenerate after runs with `python -m agent.main` or dashboard; copy from `logs/audit_log.json` if needed) |
+
 ## Entry points
 
 ### 1 · Command-line batch (CLI)
@@ -119,6 +139,7 @@ When LLM triage is **off** or keys are missing, the agent uses **rule-based tria
 ### Outputs
 
 - `logs/audit_log.json` — triage, outcome, every tool step (thought, tool, attempt, status), final_decision, confidence  
+- **`audit_log.json` (repo root)** — copy committed for submission; mirror of the latest full batch run  
 - `logs/dead_letter.json` — escalation transport failures  
 
 ### Docker (full stack: UI build + API)
@@ -150,8 +171,9 @@ docker run --rm -p 8000:8000 -e AGENT_SIMULATE_FAULTS=1 shopwave-agent
 
 - **[Full project guide (Markdown)](docs/PROJECT_GUIDE.md)** — overview, repo layout, tools, env vars, checklist  
 - **[Project guide (HTML → Print / Save as PDF)](docs/PROJECT_GUIDE.html)** — open in browser, Print → Save as PDF  
-- [Architecture (Mermaid)](docs/architecture.md) — agent loop, tools, UI streaming  
-- [Failure mode analysis](docs/failure_modes.md)  
+- **[architecture.png](architecture.png)** — 1-page diagram (submission)  
+- [Architecture (Mermaid source)](docs/architecture.md) — same design in Markdown  
+- **[failure_modes.md](failure_modes.md)** — failure scenarios (submission; copy also under `docs/`)  
 
 ## Demo checklist
 

@@ -53,10 +53,13 @@ hackathonex/
 │   ├── PROJECT_GUIDE.md      # This file
 │   ├── PROJECT_GUIDE.html    # Print-friendly → Save as PDF from browser
 │   ├── architecture.md       # Mermaid diagram
-│   └── failure_modes.md      # Failure scenarios write-up
+│   └── failure_modes.md      # Pointer → ../failure_modes.md
 ├── logs/
-│   ├── audit_log.json        # Generated after each batch run
+│   ├── audit_log.json        # Generated after each batch run (gitignored)
 │   └── dead_letter.json      # Escalation transport failures (if any)
+├── architecture.png          # 1-page architecture diagram (submission)
+├── failure_modes.md          # Failure scenarios (submission; canonical)
+├── audit_log.json            # Committed demo output — all 20 tickets (submission)
 ├── agentic_ai_hackthon_2026_sample_data-main/   # Hackathon sample data
 ├── .env.example              # Template environment variables
 ├── requirements.txt          # Python dependencies

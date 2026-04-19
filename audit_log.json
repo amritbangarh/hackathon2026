@@ -1,0 +1,1289 @@
+[
+  {
+    "ticket_id": "TKT-001",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "high",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund refunded for order ORD-1001; reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"high\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-001', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'high', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C001', 'name': 'Alice Turner', 'email': 'alice.turner@email.com', 'phone': '+1-415-555-0101', 'tier': 'vip', 'member_since': '2019-03-12', 'total_orders': 47, 'total_spent': 6840.5, 'address': {'street': '12 Maple Avenue', 'city': 'San Francisco', 'state': 'CA', 'zip': '94102'}, 'notes': 'Long-standing VIP. Has had 2 refunds in the past year, both approved.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1001', 'customer_id': 'C001', 'product_id': 'P001', 'quantity': 1, 'amount': 129.99, 'status': 'delivered', 'order_date': '2024-02-10', 'delivery_date': '2024-02-14', 'return_deadline': '2024-03-15', 'refund_status': None, 'notes': 'Delivered on time. No issues logged at delivery.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P001', 'name': 'ProSound Wireless Headphones', 'category': 'electronics', 'price': 129.99, 'warranty_months': 12, 'return_window_days': 30, 'returnable': True, 'notes': 'Return not accepted if seal is broken unless item is defective.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': True, 'reason': 'Damaged/defective policy'}",
+        "status": "success"
+      },
+      {
+        "thought": "Eligibility passed; issue refund for verified order amount.",
+        "tool_called": "issue_refund",
+        "attempt": 1,
+        "result": "{'status': 'refunded', 'order_id': 'ORD-1001', 'amount': 129.99}",
+        "status": "success"
+      },
+      {
+        "thought": "Send final customer resolution.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-001', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_refund",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-002",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund declined: Already refunded; policy reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-002', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C002', 'name': 'Bob Mendes', 'email': 'bob.mendes@email.com', 'phone': '+1-212-555-0198', 'tier': 'standard', 'member_since': '2023-10-05', 'total_orders': 3, 'total_spent': 210.0, 'address': {'street': '88 Birch Street', 'city': 'New York', 'state': 'NY', 'zip': '10001'}, 'notes': 'New customer. No prior refund history.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1002', 'customer_id': 'C002', 'product_id': 'P006', 'quantity': 1, 'amount': 249.99, 'status': 'delivered', 'order_date': '2024-03-01', 'delivery_date': '2024-03-04', 'return_deadline': '2024-03-19', 'refund_status': None, 'notes': 'High-value item. 15-day return window applies.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P006', 'name': 'PulseX Smart Watch', 'category': 'electronics', 'price': 249.99, 'warranty_months': 12, 'return_window_days': 15, 'returnable': True, 'notes': 'Only 15-day return window due to high-value electronics policy. Warranty covers hardware defects.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': False, 'reason': 'Already refunded'}",
+        "status": "success"
+      },
+      {
+        "thought": "Decline refund and provide clear policy guidance.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-002', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_declined",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-003",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "high",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Escalated to human agent (priority=high): Non-refund path requires specialist: Customer requested replacement",
+    "escalation_priority": "high",
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"high\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-003', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'high', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C003', 'name': 'Carol Nguyen', 'email': 'carol.nguyen@email.com', 'phone': '+1-312-555-0143', 'tier': 'premium', 'member_since': '2021-06-18', 'total_orders': 22, 'total_spent': 3120.75, 'address': {'street': '45 Oak Lane', 'city': 'Chicago', 'state': 'IL', 'zip': '60601'}, 'notes': 'Premium member. Prefers email communication.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1003', 'customer_id': 'C003', 'product_id': 'P003', 'quantity': 1, 'amount': 199.99, 'status': 'delivered', 'order_date': '2024-01-05', 'delivery_date': '2024-01-09', 'return_deadline': '2024-02-08', 'refund_status': None, 'notes': 'Return window has expired. Warranty still active until 2026-01-09.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P003', 'name': 'BrewMaster 3000 Coffee Maker', 'category': 'home_appliances', 'price': 199.99, 'warranty_months': 24, 'return_window_days': 30, 'returnable': True, 'notes': 'Warranty covers manufacturing defects only. Does not cover user damage.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': False, 'reason': 'Customer requested replacement'}",
+        "status": "success"
+      },
+      {
+        "thought": "Escalate because confidence/validation failed or specialist path required.",
+        "tool_called": "escalate",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-003', 'status': 'escalated', 'summary': {'attempted_tools': ['llm_triage', 'begin_ticket_session', 'get_customer', 'get_order', 'get_product', 'check_refund_eligibility'], 'failed_tools': ['llm_triage'], 'reason': 'Non-refund path requires specialist: Customer requested replacement', 'recommended_action': 'Human specialist review required', 'triage': {'category': 'refund_or_return', 'urgency': 'high', 'resolvability': 'agent_can_resolve', 'triage_source': 'rules_only'}, 'priority': 'high'}, 'priority': 'high'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "escalated",
+    "confidence": 0.55
+  },
+  {
+    "ticket_id": "TKT-004",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "high",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund refunded for order ORD-1004; reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"high\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-004', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'high', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C004', 'name': 'David Park', 'email': 'david.park@email.com', 'phone': '+1-206-555-0177', 'tier': 'standard', 'member_since': '2022-01-30', 'total_orders': 9, 'total_spent': 780.2, 'address': {'street': '300 Pine Road', 'city': 'Seattle', 'state': 'WA', 'zip': '98101'}, 'notes': \"Has raised 1 chargeback dispute in the past \u2014 resolved in ShopWave's favour.\"}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1004', 'customer_id': 'C004', 'product_id': 'P002', 'quantity': 1, 'amount': 89.99, 'status': 'delivered', 'order_date': '2024-02-20', 'delivery_date': '2024-02-24', 'return_deadline': '2024-03-25', 'refund_status': None, 'notes': 'Customer requested size exchange via chat but no formal return initiated.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P002', 'name': 'SwiftRun Pro Running Shoes', 'category': 'footwear', 'price': 89.99, 'warranty_months': 0, 'return_window_days': 30, 'returnable': True, 'notes': 'Must be unworn and in original packaging. No return if used outdoors.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': True, 'reason': 'Wrong item delivered'}",
+        "status": "success"
+      },
+      {
+        "thought": "Eligibility passed; issue refund for verified order amount.",
+        "tool_called": "issue_refund",
+        "attempt": 1,
+        "result": "{'status': 'refunded', 'order_id': 'ORD-1004', 'amount': 89.99}",
+        "status": "success"
+      },
+      {
+        "thought": "Send final customer resolution.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-004', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_refund",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-005",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund declined: Outside return policy; policy reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-005', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C005', 'name': 'Emma Collins', 'email': 'emma.collins@email.com', 'phone': '+1-512-555-0165', 'tier': 'vip', 'member_since': '2018-11-02', 'total_orders': 91, 'total_spent': 14220.0, 'address': {'street': '7 Sunset Blvd', 'city': 'Austin', 'state': 'TX', 'zip': '73301'}, 'notes': 'Highest lifetime value customer. Has a standing exception for extended return windows pre-approved by management.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1005', 'customer_id': 'C005', 'product_id': 'P008', 'quantity': 2, 'amount': 159.98, 'status': 'delivered', 'order_date': '2023-12-15', 'delivery_date': '2023-12-19', 'return_deadline': '2024-01-18', 'refund_status': None, 'notes': 'Return window expired. VIP customer with pre-approved extended return exception on file.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P008', 'name': 'BoomBox Mini Bluetooth Speaker', 'category': 'electronics', 'price': 79.99, 'warranty_months': 12, 'return_window_days': 30, 'returnable': True, 'notes': 'Return not accepted if device has been registered online.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': False, 'reason': 'Outside return policy'}",
+        "status": "success"
+      },
+      {
+        "thought": "Decline refund and provide clear policy guidance.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-005', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_declined",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-006",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund refunded for order ORD-1006; reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-006', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C006', 'name': 'Frank Osei', 'email': 'frank.osei@email.com', 'phone': '+1-404-555-0112', 'tier': 'standard', 'member_since': '2024-01-14', 'total_orders': 1, 'total_spent': 49.99, 'address': {'street': '19 Elm Street', 'city': 'Atlanta', 'state': 'GA', 'zip': '30301'}, 'notes': 'Brand new customer. First and only order.'}",
+        "status": "success"
+      },
+      {
+        "thought": "No order id supplied; infer order by customer.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1006', 'customer_id': 'C006', 'product_id': 'P005', 'quantity': 1, 'amount': 39.99, 'status': 'delivered', 'order_date': '2024-03-10', 'delivery_date': '2024-03-13', 'return_deadline': '2024-04-12', 'refund_status': None, 'notes': 'First order by this customer.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P005', 'name': 'ZenFlow Yoga Mat', 'category': 'sports', 'price': 39.99, 'warranty_months': 0, 'return_window_days': 30, 'returnable': True, 'notes': 'Non-returnable if used. Hygiene policy applies.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': True, 'reason': 'Within return window'}",
+        "status": "success"
+      },
+      {
+        "thought": "Eligibility passed; issue refund for verified order amount.",
+        "tool_called": "issue_refund",
+        "attempt": 1,
+        "result": "{'status': 'refunded', 'order_id': 'ORD-1006', 'amount': 39.99}",
+        "status": "success"
+      },
+      {
+        "thought": "Send final customer resolution.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-006', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_refund",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-007",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund refunded for order ORD-1007; reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-007', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C007', 'name': 'Grace Patel', 'email': 'grace.patel@email.com', 'phone': '+1-617-555-0134', 'tier': 'premium', 'member_since': '2020-08-22', 'total_orders': 35, 'total_spent': 4890.0, 'address': {'street': '56 Willow Way', 'city': 'Boston', 'state': 'MA', 'zip': '02101'}, 'notes': 'Premium member. Has submitted 4 refund requests \u2014 all legitimate, all approved.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1007', 'customer_id': 'C007', 'product_id': 'P004', 'quantity': 1, 'amount': 49.99, 'status': 'delivered', 'order_date': '2024-02-01', 'delivery_date': '2024-02-05', 'return_deadline': '2024-04-05', 'refund_status': None, 'notes': '60-day return window applies for this product category.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P004', 'name': 'ErgoLift Laptop Stand', 'category': 'electronics_accessories', 'price': 49.99, 'warranty_months': 6, 'return_window_days': 60, 'returnable': True, 'notes': 'Extended 60-day return window applies to this product category.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': True, 'reason': 'Within return window'}",
+        "status": "success"
+      },
+      {
+        "thought": "Eligibility passed; issue refund for verified order amount.",
+        "tool_called": "issue_refund",
+        "attempt": 1,
+        "result": "{'status': 'refunded', 'order_id': 'ORD-1007', 'amount': 49.99}",
+        "status": "success"
+      },
+      {
+        "thought": "Send final customer resolution.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-007', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_refund",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-008",
+    "triage": {
+      "category": "product_issue",
+      "urgency": "high",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund refunded for order ORD-1008; reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"product_issue\", \"urgency\": \"high\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.72}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-008', 'intent': 'product_issue', 'confidence': 0.72, 'urgency': 'high', 'category': 'product_issue', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C008', 'name': 'Henry Marsh', 'email': 'henry.marsh@email.com', 'phone': '+1-303-555-0188', 'tier': 'standard', 'member_since': '2022-05-19', 'total_orders': 14, 'total_spent': 1120.6, 'address': {'street': '210 Cedar Drive', 'city': 'Denver', 'state': 'CO', 'zip': '80201'}, 'notes': 'Regular customer. No flags.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1008', 'customer_id': 'C008', 'product_id': 'P007', 'quantity': 1, 'amount': 44.99, 'status': 'delivered', 'order_date': '2024-03-05', 'delivery_date': '2024-03-08', 'return_deadline': '2024-04-07', 'refund_status': None, 'notes': 'Item reported as damaged on arrival by customer via email. No formal claim opened.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P007', 'name': 'LumiDesk LED Desk Lamp', 'category': 'home', 'price': 44.99, 'warranty_months': 12, 'return_window_days': 30, 'returnable': True, 'notes': 'Standard return policy applies.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': True, 'reason': 'Damaged/defective policy'}",
+        "status": "success"
+      },
+      {
+        "thought": "Eligibility passed; issue refund for verified order amount.",
+        "tool_called": "issue_refund",
+        "attempt": 1,
+        "result": "{'status': 'refunded', 'order_id': 'ORD-1008', 'amount': 44.99}",
+        "status": "success"
+      },
+      {
+        "thought": "Send final customer resolution.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-008', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_refund",
+    "confidence": 0.75
+  },
+  {
+    "ticket_id": "TKT-009",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund declined: Already refunded; policy reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-009', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C009', 'name': 'Irene Castillo', 'email': 'irene.castillo@email.com', 'phone': '+1-713-555-0156', 'tier': 'premium', 'member_since': '2021-02-10', 'total_orders': 28, 'total_spent': 3670.9, 'address': {'street': '88 Rosewood Court', 'city': 'Houston', 'state': 'TX', 'zip': '77001'}, 'notes': 'Premium member. Has reported 2 damaged item incidents \u2014 both verified.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1009', 'customer_id': 'C009', 'product_id': 'P001', 'quantity': 1, 'amount': 129.99, 'status': 'delivered', 'order_date': '2024-02-25', 'delivery_date': '2024-02-28', 'return_deadline': '2024-03-29', 'refund_status': 'refunded', 'notes': 'Refund already processed on 2024-03-02 for this order. Full amount returned.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P001', 'name': 'ProSound Wireless Headphones', 'category': 'electronics', 'price': 129.99, 'warranty_months': 12, 'return_window_days': 30, 'returnable': True, 'notes': 'Return not accepted if seal is broken unless item is defective.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': False, 'reason': 'Already refunded'}",
+        "status": "success"
+      },
+      {
+        "thought": "Decline refund and provide clear policy guidance.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-009', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_declined",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-010",
+    "triage": {
+      "category": "order_status",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Informational reply sent from knowledge base.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"order_status\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.7}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-010', 'intent': 'order_status', 'confidence': 0.7, 'urgency': 'medium', 'category': 'order_status', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C010', 'name': 'James Wu', 'email': 'james.wu@email.com', 'phone': '+1-858-555-0199', 'tier': 'standard', 'member_since': '2023-03-28', 'total_orders': 6, 'total_spent': 430.15, 'address': {'street': '40 Harbor View', 'city': 'San Diego', 'state': 'CA', 'zip': '92101'}, 'notes': 'No issues on record.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1010', 'customer_id': 'C010', 'product_id': 'P003', 'quantity': 1, 'amount': 199.99, 'status': 'shipped', 'order_date': '2024-03-12', 'delivery_date': None, 'return_deadline': None, 'refund_status': None, 'notes': 'In transit. Expected delivery 2024-03-16. Tracking: TRK-88291.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P003', 'name': 'BrewMaster 3000 Coffee Maker', 'category': 'home_appliances', 'price': 199.99, 'warranty_months': 24, 'return_window_days': 30, 'returnable': True, 'notes': 'Warranty covers manufacturing defects only. Does not cover user damage.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Unknown or policy-type query, consult knowledge base.",
+        "tool_called": "search_knowledge_base",
+        "attempt": 1,
+        "result": "{'answer': 'Please share more details so we can help precisely.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Send policy/information response to customer.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-010', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_info",
+    "confidence": 0.7
+  },
+  {
+    "ticket_id": "TKT-011",
+    "triage": {
+      "category": "ambiguous",
+      "urgency": "low",
+      "resolvability": "needs_human_review",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Escalated to human agent (priority=low): Low confidence after fallback response",
+    "escalation_priority": "low",
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"ambiguous\", \"urgency\": \"low\", \"resolvability\": \"needs_human_review\", \"confidence\": 0.45}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-011', 'intent': 'ambiguous', 'confidence': 0.45, 'urgency': 'low', 'category': 'ambiguous', 'resolvability': 'needs_human_review'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C001', 'name': 'Alice Turner', 'email': 'alice.turner@email.com', 'phone': '+1-415-555-0101', 'tier': 'vip', 'member_since': '2019-03-12', 'total_orders': 47, 'total_spent': 6840.5, 'address': {'street': '12 Maple Avenue', 'city': 'San Francisco', 'state': 'CA', 'zip': '94102'}, 'notes': 'Long-standing VIP. Has had 2 refunds in the past year, both approved.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1011', 'customer_id': 'C001', 'product_id': 'P006', 'quantity': 1, 'amount': 249.99, 'status': 'delivered', 'order_date': '2024-03-08', 'delivery_date': '2024-03-11', 'return_deadline': '2024-03-26', 'refund_status': None, 'notes': 'Customer reported receiving wrong colour variant. Correct order was Blue, received Black.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P006', 'name': 'PulseX Smart Watch', 'category': 'electronics', 'price': 249.99, 'warranty_months': 12, 'return_window_days': 15, 'returnable': True, 'notes': 'Only 15-day return window due to high-value electronics policy. Warranty covers hardware defects.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Unknown or policy-type query, consult knowledge base.",
+        "tool_called": "search_knowledge_base",
+        "attempt": 1,
+        "result": "{'answer': 'Please share more details so we can help precisely.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Send policy/information response to customer.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-011', 'status': 'sent'}",
+        "status": "success"
+      },
+      {
+        "thought": "Escalate because confidence/validation failed or specialist path required.",
+        "tool_called": "escalate",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-011', 'status': 'escalated', 'summary': {'attempted_tools': ['llm_triage', 'begin_ticket_session', 'get_customer', 'get_order', 'get_product', 'search_knowledge_base', 'send_reply'], 'failed_tools': ['llm_triage'], 'reason': 'Low confidence after fallback response', 'recommended_action': 'Human specialist review required', 'triage': {'category': 'ambiguous', 'urgency': 'low', 'resolvability': 'needs_human_review', 'triage_source': 'rules_only'}, 'priority': 'low'}, 'priority': 'low'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "escalated",
+    "confidence": 0.45
+  },
+  {
+    "ticket_id": "TKT-012",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund refunded for order ORD-1012; reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-012', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C003', 'name': 'Carol Nguyen', 'email': 'carol.nguyen@email.com', 'phone': '+1-312-555-0143', 'tier': 'premium', 'member_since': '2021-06-18', 'total_orders': 22, 'total_spent': 3120.75, 'address': {'street': '45 Oak Lane', 'city': 'Chicago', 'state': 'IL', 'zip': '60601'}, 'notes': 'Premium member. Prefers email communication.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1012', 'customer_id': 'C003', 'product_id': 'P002', 'quantity': 1, 'amount': 89.99, 'status': 'processing', 'order_date': '2024-03-14', 'delivery_date': None, 'return_deadline': None, 'refund_status': None, 'notes': 'Order placed but not yet shipped. Customer can cancel free of charge.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P002', 'name': 'SwiftRun Pro Running Shoes', 'category': 'footwear', 'price': 89.99, 'warranty_months': 0, 'return_window_days': 30, 'returnable': True, 'notes': 'Must be unworn and in original packaging. No return if used outdoors.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': True, 'reason': 'Order can be canceled pre-shipment'}",
+        "status": "success"
+      },
+      {
+        "thought": "Eligibility passed; issue refund for verified order amount.",
+        "tool_called": "issue_refund",
+        "attempt": 1,
+        "result": "{'status': 'refunded', 'order_id': 'ORD-1012', 'amount': 89.99}",
+        "status": "success"
+      },
+      {
+        "thought": "Send final customer resolution.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-012', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_refund",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-013",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund declined: Registered device is non-returnable; policy reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-013', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C007', 'name': 'Grace Patel', 'email': 'grace.patel@email.com', 'phone': '+1-617-555-0134', 'tier': 'premium', 'member_since': '2020-08-22', 'total_orders': 35, 'total_spent': 4890.0, 'address': {'street': '56 Willow Way', 'city': 'Boston', 'state': 'MA', 'zip': '02101'}, 'notes': 'Premium member. Has submitted 4 refund requests \u2014 all legitimate, all approved.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1013', 'customer_id': 'C007', 'product_id': 'P008', 'quantity': 1, 'amount': 79.99, 'status': 'delivered', 'order_date': '2024-01-20', 'delivery_date': '2024-01-24', 'return_deadline': '2024-02-23', 'refund_status': None, 'notes': 'Return window expired. Device was registered online by customer on 2024-01-25. Non-returnable per policy.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P008', 'name': 'BoomBox Mini Bluetooth Speaker', 'category': 'electronics', 'price': 79.99, 'warranty_months': 12, 'return_window_days': 30, 'returnable': True, 'notes': 'Return not accepted if device has been registered online.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': False, 'reason': 'Registered device is non-returnable'}",
+        "status": "success"
+      },
+      {
+        "thought": "Decline refund and provide clear policy guidance.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-013', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_declined",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-014",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund refunded for order ORD-1014; reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-014', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C008', 'name': 'Henry Marsh', 'email': 'henry.marsh@email.com', 'phone': '+1-303-555-0188', 'tier': 'standard', 'member_since': '2022-05-19', 'total_orders': 14, 'total_spent': 1120.6, 'address': {'street': '210 Cedar Drive', 'city': 'Denver', 'state': 'CO', 'zip': '80201'}, 'notes': 'Regular customer. No flags.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1014', 'customer_id': 'C008', 'product_id': 'P006', 'quantity': 1, 'amount': 249.99, 'status': 'delivered', 'order_date': '2024-03-01', 'delivery_date': '2024-03-04', 'return_deadline': '2024-03-19', 'refund_status': None, 'notes': 'Within return window. No issues logged.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P006', 'name': 'PulseX Smart Watch', 'category': 'electronics', 'price': 249.99, 'warranty_months': 12, 'return_window_days': 15, 'returnable': True, 'notes': 'Only 15-day return window due to high-value electronics policy. Warranty covers hardware defects.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': True, 'reason': 'Within return window'}",
+        "status": "success"
+      },
+      {
+        "thought": "Eligibility passed; issue refund for verified order amount.",
+        "tool_called": "issue_refund",
+        "attempt": 1,
+        "result": "{'status': 'refunded', 'order_id': 'ORD-1014', 'amount': 249.99}",
+        "status": "success"
+      },
+      {
+        "thought": "Send final customer resolution.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-014', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_refund",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-015",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "high",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Escalated to human agent (priority=high): Non-refund path requires specialist: Customer requested replacement",
+    "escalation_priority": "high",
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"high\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-015', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'high', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C005', 'name': 'Emma Collins', 'email': 'emma.collins@email.com', 'phone': '+1-512-555-0165', 'tier': 'vip', 'member_since': '2018-11-02', 'total_orders': 91, 'total_spent': 14220.0, 'address': {'street': '7 Sunset Blvd', 'city': 'Austin', 'state': 'TX', 'zip': '73301'}, 'notes': 'Highest lifetime value customer. Has a standing exception for extended return windows pre-approved by management.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1015', 'customer_id': 'C005', 'product_id': 'P003', 'quantity': 1, 'amount': 199.99, 'status': 'delivered', 'order_date': '2024-02-18', 'delivery_date': '2024-02-22', 'return_deadline': '2024-03-23', 'refund_status': None, 'notes': 'Item arrived with cracked water tank. Customer sent photo evidence.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P003', 'name': 'BrewMaster 3000 Coffee Maker', 'category': 'home_appliances', 'price': 199.99, 'warranty_months': 24, 'return_window_days': 30, 'returnable': True, 'notes': 'Warranty covers manufacturing defects only. Does not cover user damage.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': False, 'reason': 'Customer requested replacement'}",
+        "status": "success"
+      },
+      {
+        "thought": "Escalate because confidence/validation failed or specialist path required.",
+        "tool_called": "escalate",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-015', 'status': 'escalated', 'summary': {'attempted_tools': ['llm_triage', 'begin_ticket_session', 'get_customer', 'get_order', 'get_product', 'check_refund_eligibility'], 'failed_tools': ['llm_triage'], 'reason': 'Non-refund path requires specialist: Customer requested replacement', 'recommended_action': 'Human specialist review required', 'triage': {'category': 'refund_or_return', 'urgency': 'high', 'resolvability': 'agent_can_resolve', 'triage_source': 'rules_only'}, 'priority': 'high'}, 'priority': 'high'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "escalated",
+    "confidence": 0.55
+  },
+  {
+    "ticket_id": "TKT-016",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Escalated to human agent (priority=medium): Customer not found for provided email",
+    "escalation_priority": "medium",
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-016', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "None",
+        "status": "success"
+      },
+      {
+        "thought": "Escalate because confidence/validation failed or specialist path required.",
+        "tool_called": "escalate",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-016', 'status': 'escalated', 'summary': {'attempted_tools': ['llm_triage', 'begin_ticket_session', 'get_customer'], 'failed_tools': ['llm_triage'], 'reason': 'Customer not found for provided email', 'recommended_action': 'Human specialist review required', 'triage': {'category': 'refund_or_return', 'urgency': 'medium', 'resolvability': 'agent_can_resolve', 'triage_source': 'rules_only'}, 'priority': 'medium'}, 'priority': 'medium'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "escalated",
+    "confidence": 0.4
+  },
+  {
+    "ticket_id": "TKT-017",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Escalated to human agent (priority=medium): Order data missing or conflicting",
+    "escalation_priority": "medium",
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-017', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C004', 'name': 'David Park', 'email': 'david.park@email.com', 'phone': '+1-206-555-0177', 'tier': 'standard', 'member_since': '2022-01-30', 'total_orders': 9, 'total_spent': 780.2, 'address': {'street': '300 Pine Road', 'city': 'Seattle', 'state': 'WA', 'zip': '98101'}, 'notes': \"Has raised 1 chargeback dispute in the past \u2014 resolved in ShopWave's favour.\"}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "None",
+        "status": "success"
+      },
+      {
+        "thought": "Escalate because confidence/validation failed or specialist path required.",
+        "tool_called": "escalate",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-017', 'status': 'escalated', 'summary': {'attempted_tools': ['llm_triage', 'begin_ticket_session', 'get_customer', 'get_order'], 'failed_tools': ['llm_triage'], 'reason': 'Order data missing or conflicting', 'recommended_action': 'Human specialist review required', 'triage': {'category': 'refund_or_return', 'urgency': 'medium', 'resolvability': 'agent_can_resolve', 'triage_source': 'rules_only'}, 'priority': 'medium'}, 'priority': 'medium'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "escalated",
+    "confidence": 0.42
+  },
+  {
+    "ticket_id": "TKT-018",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "high",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund refunded for order ORD-1002; reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"high\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-018', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'high', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C002', 'name': 'Bob Mendes', 'email': 'bob.mendes@email.com', 'phone': '+1-212-555-0198', 'tier': 'standard', 'member_since': '2023-10-05', 'total_orders': 3, 'total_spent': 210.0, 'address': {'street': '88 Birch Street', 'city': 'New York', 'state': 'NY', 'zip': '10001'}, 'notes': 'New customer. No prior refund history.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Order-related issue requires order lookup.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1002', 'customer_id': 'C002', 'product_id': 'P006', 'quantity': 1, 'amount': 249.99, 'status': 'delivered', 'order_date': '2024-03-01', 'delivery_date': '2024-03-04', 'return_deadline': '2024-03-19', 'refund_status': None, 'notes': 'High-value item. 15-day return window applies.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P006', 'name': 'PulseX Smart Watch', 'category': 'electronics', 'price': 249.99, 'warranty_months': 12, 'return_window_days': 15, 'returnable': True, 'notes': 'Only 15-day return window due to high-value electronics policy. Warranty covers hardware defects.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': True, 'reason': 'Within return window'}",
+        "status": "success"
+      },
+      {
+        "thought": "Eligibility passed; issue refund for verified order amount.",
+        "tool_called": "issue_refund",
+        "attempt": 1,
+        "result": "{'status': 'refunded', 'order_id': 'ORD-1002', 'amount': 249.99}",
+        "status": "success"
+      },
+      {
+        "thought": "Send final customer resolution.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-018', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_refund",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-019",
+    "triage": {
+      "category": "refund_or_return",
+      "urgency": "medium",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Refund declined: Already refunded; policy reply sent.",
+    "escalation_priority": null,
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"refund_or_return\", \"urgency\": \"medium\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.78}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-019', 'intent': 'refund_or_return', 'confidence': 0.78, 'urgency': 'medium', 'category': 'refund_or_return', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C009', 'name': 'Irene Castillo', 'email': 'irene.castillo@email.com', 'phone': '+1-713-555-0156', 'tier': 'premium', 'member_since': '2021-02-10', 'total_orders': 28, 'total_spent': 3670.9, 'address': {'street': '88 Rosewood Court', 'city': 'Houston', 'state': 'TX', 'zip': '77001'}, 'notes': 'Premium member. Has reported 2 damaged item incidents \u2014 both verified.'}",
+        "status": "success"
+      },
+      {
+        "thought": "No order id supplied; infer order by customer.",
+        "tool_called": "get_order",
+        "attempt": 1,
+        "result": "{'order_id': 'ORD-1009', 'customer_id': 'C009', 'product_id': 'P001', 'quantity': 1, 'amount': 129.99, 'status': 'delivered', 'order_date': '2024-02-25', 'delivery_date': '2024-02-28', 'return_deadline': '2024-03-29', 'refund_status': 'refunded', 'notes': 'Refund already processed on 2024-03-02 for this order. Full amount returned.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Resolve product context from order.",
+        "tool_called": "get_product",
+        "attempt": 1,
+        "result": "{'product_id': 'P001', 'name': 'ProSound Wireless Headphones', 'category': 'electronics', 'price': 129.99, 'warranty_months': 12, 'return_window_days': 30, 'returnable': True, 'notes': 'Return not accepted if seal is broken unless item is defective.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Check policy eligibility before any refund action (order-scoped tool).",
+        "tool_called": "check_refund_eligibility",
+        "attempt": 1,
+        "result": "{'eligible': False, 'reason': 'Already refunded'}",
+        "status": "success"
+      },
+      {
+        "thought": "Decline refund and provide clear policy guidance.",
+        "tool_called": "send_reply",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-019', 'status': 'sent'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "resolved_declined",
+    "confidence": 0.78
+  },
+  {
+    "ticket_id": "TKT-020",
+    "triage": {
+      "category": "product_issue",
+      "urgency": "high",
+      "resolvability": "agent_can_resolve",
+      "triage_source": "rules_only"
+    },
+    "outcome": "Escalated to human agent (priority=high): Order data missing or conflicting",
+    "escalation_priority": "high",
+    "steps": [
+      {
+        "thought": "Optional LLM triage (rules baseline + merge). Policy/refund tools unchanged.",
+        "tool_called": "llm_triage",
+        "attempt": 1,
+        "result": "{\"backend\": \"ollama\", \"baseline\": {\"category\": \"product_issue\", \"urgency\": \"high\", \"resolvability\": \"agent_can_resolve\", \"confidence\": 0.72}, \"llm_used\": false, \"model\": \"llama3.2\", \"request_endpoint\": \"http://127.0.0.1:11434/api/chat\", \"error\": \"ollama_request_failed: Client error '404 Not Found' for url 'http://127.0.0.1:11434/api/chat'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+        "status": "failed"
+      },
+      {
+        "thought": "Open ticket session with triage (category, urgency, resolvability) for audit.",
+        "tool_called": "begin_ticket_session",
+        "attempt": 1,
+        "result": "{'status': 'ready', 'ticket_id': 'TKT-020', 'intent': 'product_issue', 'confidence': 0.72, 'urgency': 'high', 'category': 'product_issue', 'resolvability': 'agent_can_resolve'}",
+        "status": "success"
+      },
+      {
+        "thought": "Start context gathering with customer lookup.",
+        "tool_called": "get_customer",
+        "attempt": 1,
+        "result": "{'customer_id': 'C010', 'name': 'James Wu', 'email': 'james.wu@email.com', 'phone': '+1-858-555-0199', 'tier': 'standard', 'member_since': '2023-03-28', 'total_orders': 6, 'total_spent': 430.15, 'address': {'street': '40 Harbor View', 'city': 'San Diego', 'state': 'CA', 'zip': '92101'}, 'notes': 'No issues on record.'}",
+        "status": "success"
+      },
+      {
+        "thought": "Escalate because confidence/validation failed or specialist path required.",
+        "tool_called": "escalate",
+        "attempt": 1,
+        "result": "{'ticket_id': 'TKT-020', 'status': 'escalated', 'summary': {'attempted_tools': ['llm_triage', 'begin_ticket_session', 'get_customer'], 'failed_tools': ['llm_triage'], 'reason': 'Order data missing or conflicting', 'recommended_action': 'Human specialist review required', 'triage': {'category': 'product_issue', 'urgency': 'high', 'resolvability': 'agent_can_resolve', 'triage_source': 'rules_only'}, 'priority': 'high'}, 'priority': 'high'}",
+        "status": "success"
+      }
+    ],
+    "final_decision": "escalated",
+    "confidence": 0.42
+  }
+]
